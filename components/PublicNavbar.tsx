@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Lock, Sparkles, Home, Grid, Tag, Moon, Sun } from 'lucide-react';
+import { Menu, X, Lock, Home, Grid, Tag, Moon, Sun, Brush } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 export const PublicNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoError, setLogoError] = useState(false); // State to handle broken image
   const location = useLocation();
   const { theme, toggleTheme, language, setLanguage, t } = useTheme();
 
@@ -41,11 +42,22 @@ export const PublicNavbar = () => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-900/30 group-hover:bg-rose-100 dark:group-hover:bg-rose-900/50 transition-colors">
-              <Sparkles className="w-5 h-5 text-rose-500" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="relative flex items-center justify-center w-10 h-10 transition-transform group-hover:scale-110">
+              {!logoError ? (
+                <img 
+                  src="/favicon.svg" 
+                  alt="Colorín Logo" 
+                  className="w-full h-full object-contain drop-shadow-md"
+                  onError={() => setLogoError(true)} 
+                />
+              ) : (
+                <div className="w-10 h-10 bg-rose-500 rounded-full flex items-center justify-center text-white shadow-lg">
+                  <Brush className="w-5 h-5" />
+                </div>
+              )}
             </div>
-            <span className="text-xl md:text-2xl font-black tracking-tight text-gray-900 dark:text-white">
+            <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
               Colorín<span className="text-rose-500">.</span>
             </span>
           </Link>
