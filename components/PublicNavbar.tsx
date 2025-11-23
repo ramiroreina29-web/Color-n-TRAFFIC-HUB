@@ -43,7 +43,7 @@ export const PublicNavbar = () => {
           
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative flex items-center justify-center w-10 h-10 transition-transform group-hover:scale-110">
+            <div className="relative flex items-center justify-center w-12 h-12 transition-transform group-hover:scale-105 group-hover:-rotate-12 duration-300">
               {!logoError ? (
                 <img 
                   src="/favicon.svg" 

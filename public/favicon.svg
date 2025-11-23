@@ -1,19 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="grad_brand" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="grad_pencil" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e11d48;stop-opacity:1" />
     </linearGradient>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="5" dy="5" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
-  <!-- Abstract Hummingbird / Brush Shape -->
-  <path fill="url(#grad_brand)" d="M420.5,60.8c-28.5-12.5-60.8-12.8-90-2.5c-35,12-65,40-85,75c-15,26-25,55-25,85c0,10,1,20,3,30
-	c-70-25-130-75-165-135c-5-8-15-5-15,5c0,15,0,30,2,45c5,25,15,50,30,70c-15,0-30-5-40-10c-5-2-10,2-10,8
-	c0,60,40,110,95,125c-10,3-20,4-30,4c-8,0-16-1-24-3c-5-1-10,4-8,10c8,45,45,80,90,82c-40,30-90,50-145,50
-	c-10,0-20,0-30-2c-6,0-10,6-8,12c28,90,140,130,230,80c25-14,45-35,65-60c50-60,70-140,60-220
-	C460.5,200.8,465.5,100.8,420.5,60.8z"/>
+  <!-- Stylized Red Pencil Body -->
+  <path fill="url(#grad_pencil)" filter="url(#dropShadow)" d="M380.5,100.8c-10-10-25-10-35,0l-200,200c-5,5-8,12-8,20v50c0,5,4,10,10,10h50c8,0,15-3,20-8l200-200
+	c10-10,10-25,0-35L380.5,100.8z"/>
     
-  <!-- Brush Tip Accent -->
-  <circle cx="390" cy="150" r="15" fill="white" opacity="0.9"/>
-  <path fill="#ffffff" d="M380,160 Q400,250 300,300" opacity="0.2" stroke="white" stroke-width="5" stroke-linecap="round"/>
+  <!-- Pencil Tip (Wood) -->
+  <path fill="#fcd34d" d="M137.5,320.8l-40,40l40,0C137.5,360.8,137.5,320.8,137.5,320.8z"/>
+  
+  <!-- Lead/Graphite Tip -->
+  <path fill="#f43f5e" d="M97.5,360.8l15,15l-25,5L97.5,360.8z"/>
+
+  <!-- Eraser -->
+  <path fill="#fda4af" d="M417.5,63.8l-37,37l35,35l37-37c10-10,10-25,0-35l-0,0C442.5,53.8,427.5,53.8,417.5,63.8z"/>
+  
+  <!-- Metal Band -->
+  <path fill="#94a3b8" d="M380.5,100.8l35,35l5-5l-35-35L380.5,100.8z"/>
+  
+  <!-- Creative Swish/Stroke -->
+  <path fill="none" stroke="#f43f5e" stroke-width="25" stroke-linecap="round" d="M100,380 c-50,50 50,100 150,50 c80-40 150,0 200,20" opacity="0.8"/>
 </svg>
