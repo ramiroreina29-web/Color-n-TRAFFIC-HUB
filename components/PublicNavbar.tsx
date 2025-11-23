@@ -108,7 +108,7 @@ export const PublicNavbar = () => {
                 className="p-2 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-slate-700 transition-all cursor-pointer"
                 title={theme === 'dark' ? "Modo Claro" : "Modo Oscuro"}
             >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+                {theme === 'dark' ? <Sun className="w-5 h-5 pointer-events-none" /> : <Moon className="w-5 h-5 pointer-events-none" />}
             </button>
             
             <Link 
@@ -161,17 +161,18 @@ export const PublicNavbar = () => {
                     <button type="button" onClick={() => setLanguage('en')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${language === 'en' ? 'bg-white text-rose-600 border-rose-200 shadow-sm' : 'border-transparent text-gray-500'}`}>EN</button>
                  </div>
                  
-                 {/* Mobile Dark Mode Toggle - Enhanced Touch Target */}
+                 {/* Mobile Dark Mode Toggle - Fix: Direct onClick and pointer-events-none on icons */}
                  <button 
                     type="button"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        toggleTheme();
-                    }} 
+                    onClick={toggleTheme} 
                     className="p-3 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-gray-100 dark:border-slate-700 active:scale-95 transition-transform"
                     aria-label="Toggle Dark Mode"
                  >
-                    {theme === 'dark' ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-indigo-600" />}
+                    {theme === 'dark' ? (
+                        <Sun className="w-6 h-6 text-yellow-400 pointer-events-none" />
+                    ) : (
+                        <Moon className="w-6 h-6 text-indigo-600 pointer-events-none" />
+                    )}
                  </button>
               </div>
 
