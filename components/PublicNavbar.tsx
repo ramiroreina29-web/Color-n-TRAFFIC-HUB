@@ -42,8 +42,8 @@ export const PublicNavbar = () => {
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative flex items-center justify-center w-12 h-12 transition-transform group-hover:scale-105 group-hover:-rotate-12 duration-300">
+          <Link to="/" className="flex items-center gap-3 group relative z-50">
+            <div className="relative flex items-center justify-center w-10 h-10 md:w-12 md:h-12 transition-transform group-hover:scale-105 group-hover:-rotate-12 duration-300">
               {!logoError ? (
                 <img 
                   src="/favicon.svg" 
@@ -57,7 +57,7 @@ export const PublicNavbar = () => {
                 </div>
               )}
             </div>
-            <span className="text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
+            <span className="text-xl md:text-2xl font-black tracking-tight text-gray-900 dark:text-white leading-none">
               Colorín<span className="text-rose-500">.</span>
             </span>
           </Link>
@@ -86,12 +86,14 @@ export const PublicNavbar = () => {
             {/* Language Toggle */}
             <div className="flex items-center gap-1 bg-gray-100 dark:bg-slate-800 rounded-full p-1">
                 <button 
+                    type="button"
                     onClick={() => setLanguage('es')}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${language === 'es' ? 'bg-white dark:bg-slate-600 shadow-sm' : 'opacity-50 hover:opacity-100'}`}
                 >
                     🇪🇸
                 </button>
                 <button 
+                    type="button"
                     onClick={() => setLanguage('en')}
                     className={`w-8 h-8 rounded-full flex items-center justify-center text-sm transition-all ${language === 'en' ? 'bg-white dark:bg-slate-600 shadow-sm' : 'opacity-50 hover:opacity-100'}`}
                 >
@@ -101,8 +103,9 @@ export const PublicNavbar = () => {
 
             {/* Dark Mode Toggle */}
             <button
+                type="button"
                 onClick={toggleTheme}
-                className="p-2 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-slate-700 transition-all"
+                className="p-2 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:bg-rose-100 hover:text-rose-600 dark:hover:bg-slate-700 transition-all cursor-pointer"
                 title={theme === 'dark' ? "Modo Claro" : "Modo Oscuro"}
             >
                 {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -119,22 +122,24 @@ export const PublicNavbar = () => {
 
           {/* Mobile Toggle */}
           <button 
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            className="md:hidden p-2 text-gray-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 rounded-lg transition-colors relative z-50"
+            aria-label="Menu"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
 
         {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800 shadow-xl md:hidden animate-fade-in">
+          <div className="absolute top-full left-0 right-0 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl border-b border-gray-100 dark:border-slate-800 shadow-2xl md:hidden animate-fade-in z-40 max-h-[90vh] overflow-y-auto">
             <div className="flex flex-col p-4 space-y-2">
               {navLinks.map((link) => (
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-colors ${
+                  className={`flex items-center gap-3 px-4 py-4 rounded-xl font-bold text-lg transition-colors ${
                     link.highlight 
                       ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-600' 
                       : location.pathname === link.path 
@@ -147,31 +152,41 @@ export const PublicNavbar = () => {
                 </Link>
               ))}
               
-              <div className="h-px bg-gray-100 dark:bg-slate-800 my-2"></div>
+              <div className="h-px bg-gray-100 dark:bg-slate-800 my-4"></div>
 
-              {/* Mobile Settings */}
-              <div className="flex items-center justify-between px-4 py-2">
+              {/* Mobile Settings Row */}
+              <div className="flex items-center justify-between px-2 py-2 bg-gray-50 dark:bg-slate-900 rounded-xl">
                  <div className="flex items-center gap-2">
-                    <button onClick={() => setLanguage('es')} className={`px-3 py-1 rounded-lg text-sm border ${language === 'es' ? 'bg-rose-100 border-rose-200 text-rose-700' : 'border-gray-200 dark:border-slate-700 dark:text-gray-300'}`}>ES</button>
-                    <button onClick={() => setLanguage('en')} className={`px-3 py-1 rounded-lg text-sm border ${language === 'en' ? 'bg-rose-100 border-rose-200 text-rose-700' : 'border-gray-200 dark:border-slate-700 dark:text-gray-300'}`}>EN</button>
+                    <button type="button" onClick={() => setLanguage('es')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${language === 'es' ? 'bg-white text-rose-600 border-rose-200 shadow-sm' : 'border-transparent text-gray-500'}`}>ES</button>
+                    <button type="button" onClick={() => setLanguage('en')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${language === 'en' ? 'bg-white text-rose-600 border-rose-200 shadow-sm' : 'border-transparent text-gray-500'}`}>EN</button>
                  </div>
-                 <button onClick={toggleTheme} className="p-2 bg-gray-100 dark:bg-slate-800 rounded-full">
-                    {theme === 'dark' ? <Sun className="w-5 h-5 text-yellow-400" /> : <Moon className="w-5 h-5 text-gray-600" />}
+                 
+                 {/* Mobile Dark Mode Toggle - Enhanced Touch Target */}
+                 <button 
+                    type="button"
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        toggleTheme();
+                    }} 
+                    className="p-3 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-gray-100 dark:border-slate-700 active:scale-95 transition-transform"
+                    aria-label="Toggle Dark Mode"
+                 >
+                    {theme === 'dark' ? <Sun className="w-6 h-6 text-yellow-400" /> : <Moon className="w-6 h-6 text-indigo-600" />}
                  </button>
               </div>
 
               <Link 
                 to="/login" 
-                className="flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                className="flex items-center gap-3 px-4 py-4 mt-2 rounded-xl font-bold text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
               >
-                <Lock className="w-4 h-4" /> {t('nav_login')}
+                <Lock className="w-5 h-5" /> {t('nav_login')}
               </Link>
             </div>
           </div>
         )}
       </nav>
-      {/* Spacer to prevent content from hiding under fixed navbar */}
-      <div className="h-[72px] w-full bg-white dark:bg-slate-950"></div>
+      {/* Spacer */}
+      <div className="h-[76px] md:h-[84px] w-full bg-white dark:bg-slate-950"></div>
     </>
   );
 };
