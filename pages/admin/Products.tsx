@@ -245,7 +245,8 @@ const Products = () => {
         {/* Modal */}
         {modalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-                <div className="bg-white rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
+                {/* ADDED text-gray-900 to force text color reset inside white modal */}
+                <div className="bg-white text-gray-900 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur z-10">
                         <div>
                             <h2 className="text-2xl font-bold text-gray-900">{formData.id ? 'Editar Producto' : 'Crear Nuevo Producto'}</h2>
@@ -441,10 +442,10 @@ const Products = () => {
 
         <style>{`
             .label-text {
-                @apply block text-sm font-bold text-gray-700 mb-2;
+                @apply block text-sm font-bold text-gray-900 mb-2;
             }
             .input-field {
-                @apply w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all;
+                @apply w-full px-4 py-3 rounded-xl border border-gray-200 bg-white text-gray-900 focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-all;
             }
             .btn-secondary {
                 @apply bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-lg transition-colors;
