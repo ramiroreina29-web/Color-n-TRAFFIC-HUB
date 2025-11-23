@@ -12,6 +12,7 @@ import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
 import Gallery from './pages/admin/Gallery';
 import Settings from './pages/admin/Settings';
+import Subscribers from './pages/admin/Subscribers';
 import NotFound from './pages/NotFound';
 import { CookieConsent } from './components/CookieConsent';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -72,6 +73,7 @@ const App: React.FC = () => {
           <Route path="/admin/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
           <Route path="/admin/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
           <Route path="/admin/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/admin/subscribers" element={<ProtectedRoute><Subscribers /></ProtectedRoute>} />
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
