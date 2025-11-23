@@ -161,10 +161,13 @@ export const PublicNavbar = () => {
                     <button type="button" onClick={() => setLanguage('en')} className={`px-4 py-2 rounded-lg text-sm font-bold border transition-all ${language === 'en' ? 'bg-white text-rose-600 border-rose-200 shadow-sm' : 'border-transparent text-gray-500'}`}>EN</button>
                  </div>
                  
-                 {/* Mobile Dark Mode Toggle - Fix: Direct onClick and pointer-events-none on icons */}
+                 {/* Mobile Dark Mode Toggle - Robust Fix: stopPropagation + pointer-events-none */}
                  <button 
                     type="button"
-                    onClick={toggleTheme} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleTheme();
+                    }}
                     className="p-3 bg-white dark:bg-slate-800 rounded-full shadow-sm border border-gray-100 dark:border-slate-700 active:scale-95 transition-transform"
                     aria-label="Toggle Dark Mode"
                  >
