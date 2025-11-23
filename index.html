@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO & Metadata -->
+    <title>Colorín | Libros para Colorear Premium Digitales</title>
+    <meta name="description" content="Descarga libros para colorear premium en PDF y vectores. Diseños exclusivos de mandalas, animales y arte terapia para imprimir y colorear al instante." />
+    <meta name="keywords" content="libros colorear, pdf colorear, mandalas imprimir, arte terapia digital, coloring books, printable coloring pages, payhip store" />
+    <meta name="author" content="Colorín Hub" />
+    <meta name="robots" content="index, follow" />
+    <meta name="google-site-verification" content="" /> <!-- Añade aquí tu código de verificación de Google Console si lo tienes -->
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Colorín | Premium Coloring Books" />
+    <meta property="og:description" content="Tu plataforma definitiva de arte digital. Descubre, descarga y colorea diseños exclusivos hoy mismo." />
+    <meta property="og:image" content="https://img.freepik.com/free-vector/mandala-intricate-patterns-black-white_23-2148098520.jpg" />
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // Enable class-based dark mode
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+            },
+            colors: {
+              primary: {
+                50: '#fff1f2',
+                100: '#ffe4e6',
+                500: '#f43f5e', // Rose 500
+                600: '#e11d48', // Rose 600
+                700: '#be123c', // Rose 700
+              },
+              secondary: {
+                500: '#3b82f6', // Blue
+                600: '#2563eb',
+              },
+              dark: {
+                950: '#020617', // Slate 950 (Deep Background)
+                900: '#0f172a', // Slate 900 (Surface)
+                800: '#1e293b', // Slate 800 (Highlight)
+              }
+            },
+            animation: {
+              'fade-in': 'fadeIn 0.8s ease-out',
+              'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+              'bounce-slow': 'bounce 3s infinite',
+              'scale-in': 'scaleIn 0.4s ease-out',
+              'marquee': 'marquee 40s linear infinite',
+              'marquee-reverse': 'marqueeReverse 40s linear infinite',
+              'float': 'float 6s ease-in-out infinite',
+            },
+            keyframes: {
+              fadeIn: {
+                '0%': { opacity: '0' },
+                '100%': { opacity: '1' },
+              },
+              slideUp: {
+                '0%': { transform: 'translateY(40px)', opacity: '0' },
+                '100%': { transform: 'translateY(0)', opacity: '1' },
+              },
+              scaleIn: {
+                '0%': { transform: 'scale(0.9)', opacity: '0' },
+                '100%': { transform: 'scale(1)', opacity: '1' },
+              },
+              marquee: {
+                '0%': { transform: 'translateX(0)' },
+                '100%': { transform: 'translateX(-50%)' },
+              },
+              marqueeReverse: {
+                 '0%': { transform: 'translateX(-50%)' },
+                 '100%': { transform: 'translateX(0)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+      body {
+        background-color: #f8fafc;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      /* Dark Mode Base Styles */
+      .dark body {
+        background-color: #020617; /* Slate 950 */
+        color: #f1f5f9;
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+      }
+      .dark ::-webkit-scrollbar-track {
+        background: #0f172a; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1; 
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #334155; 
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8; 
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.9.6",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@supabase/supabase-js": "https://aistudiocdn.com/@supabase/supabase-js@^2.84.0",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.0",
+    "vite": "https://aistudiocdn.com/vite@^7.2.4",
+    "@vitejs/plugin-react": "https://aistudiocdn.com/@vitejs/plugin-react@^5.1.1"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>
