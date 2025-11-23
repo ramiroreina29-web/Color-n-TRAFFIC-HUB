@@ -78,7 +78,7 @@ export const Showcase: React.FC<ShowcaseProps> = ({ items }) => {
         {items.length === 0 && (
            <div className="text-center py-12 border-2 border-dashed border-gray-200 rounded-3xl bg-gray-50/50">
                 <p className="text-gray-400 font-medium">El Muro de la Fama está vacío.</p>
-                <p className="text-sm text-gray-400">Sube imágenes desde el Panel Admin > Galería.</p>
+                <p className="text-sm text-gray-400">Sube imágenes desde el Panel Admin &gt; Galería.</p>
            </div>
         )}
       </div>

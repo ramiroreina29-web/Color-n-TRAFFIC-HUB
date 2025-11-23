@@ -32,7 +32,8 @@ export const useProductTracking = (productId: string | undefined) => {
         });
 
         if (error) {
-            console.error('Error tracking visit (RPC):', error);
+            // Log a cleaner message if RPC fails (likely not defined yet)
+            console.warn('Tracking RPC unavailable, using fallback. Error:', error.message);
             // Fallback if RPC fails (e.g. function not created yet)
             fallbackTrackVisit(productId, today, device, pais);
         } else {
@@ -77,7 +78,7 @@ const fallbackTrackVisit = async (productId: string, today: string, device: stri
                 });
         }
     } catch (e) {
-        console.error("Fallback error", e);
+        // Silently fail on fallback to avoid console spam
     }
 };
 
@@ -87,7 +88,7 @@ export const trackPayhipClick = async (productId: string) => {
      const { error } = await supabase.rpc('incrementar_clic', { p_id: productId });
      
      if (error) {
-         console.error("Error tracking click (RPC):", error);
+         console.warn("Click tracking RPC unavailable, using fallback.");
          // Fallback manual update
          const today = new Date().toISOString().split('T')[0];
          const { data: existing } = await supabase
