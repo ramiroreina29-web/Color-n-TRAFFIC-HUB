@@ -24,9 +24,12 @@ const Catalog = () => {
   const { t } = useTheme();
 
   // Create a map for fast color lookup: CategoryName -> ColorClass
+  // Robustness: Use lowercase keys
   const categoryColorMap = useMemo(() => {
     return categories.reduce((acc, cat) => {
-      acc[cat.nombre] = cat.color;
+      if(cat.nombre) {
+        acc[cat.nombre.trim().toLowerCase()] = cat.color;
+      }
       return acc;
     }, {} as Record<string, string>);
   }, [categories]);
@@ -213,7 +216,7 @@ const Catalog = () => {
                     key={product.id} 
                     product={product} 
                     index={idx}
-                    categoryColor={categoryColorMap[product.categoria]}
+                    categoryColor={categoryColorMap[product.categoria?.trim().toLowerCase()]}
                 />
               ))}
             </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Lock, Home, Grid, Tag, Moon, Sun, Brush, Search } from 'lucide-react';
+import { Menu, X, Lock, Home, Grid, Tag, Moon, Sun, Brush, Search, Rocket } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
 export const PublicNavbar = () => {
@@ -35,11 +35,43 @@ export const PublicNavbar = () => {
     }
   };
 
+  // Construct current full path including query params to match links exactly
+  const currentFullPath = location.pathname + location.search;
+
   const navLinks = [
-    { name: t('nav_home'), path: '/', icon: <Home className="w-4 h-4" /> },
-    { name: t('nav_catalog'), path: '/catalog', icon: <Grid className="w-4 h-4" /> },
-    { name: t('nav_offers'), path: '/catalog?filter=offers', highlight: true, icon: <Tag className="w-4 h-4" /> },
+    { 
+      name: t('nav_home'), 
+      path: '/', 
+      icon: <Home className="w-4 h-4" /> 
+    },
+    { 
+      name: t('nav_catalog'), 
+      path: '/catalog', 
+      icon: <Grid className="w-4 h-4" /> 
+    },
+    { 
+      name: t('filter_new'), 
+      path: '/catalog?filter=new', 
+      icon: <Rocket className="w-4 h-4" /> 
+    },
+    { 
+      name: t('nav_offers'), 
+      path: '/catalog?filter=offers', 
+      highlight: true, 
+      icon: <Tag className="w-4 h-4" /> 
+    },
   ];
+
+  const isActiveLink = (linkPath: string) => {
+      // Strict match for Home
+      if (linkPath === '/' && currentFullPath === '/') return true;
+      // Strict match for Filters (Offers/New)
+      if (linkPath.includes('?')) return currentFullPath === linkPath;
+      // Strict match for Catalog (to avoid highlighting it when on Offers/New)
+      if (linkPath === '/catalog') return currentFullPath === '/catalog';
+      
+      return false;
+  };
 
   return (
     <>
@@ -89,22 +121,27 @@ export const PublicNavbar = () => {
 
           {/* 3. Desktop Menu */}
           <div className="hidden md:flex items-center gap-5">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-sm font-bold flex items-center gap-2 transition-all hover:-translate-y-0.5 whitespace-nowrap ${
-                  link.highlight 
-                    ? 'text-rose-500 hover:text-rose-600 bg-rose-50 dark:bg-rose-900/20 px-4 py-2 rounded-full' 
-                    : location.pathname === link.path 
-                      ? 'text-gray-900 dark:text-white' 
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
-                }`}
-              >
-                {link.icon}
-                {link.name}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              const active = isActiveLink(link.path);
+              return (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`text-sm font-bold flex items-center gap-2 transition-all hover:-translate-y-0.5 whitespace-nowrap ${
+                    link.highlight 
+                      ? active 
+                        ? 'text-white bg-rose-600 px-4 py-2 rounded-full shadow-lg shadow-rose-500/30'
+                        : 'text-rose-500 hover:text-white hover:bg-rose-500 hover:shadow-lg hover:shadow-rose-500/30 bg-rose-50 dark:bg-rose-900/20 px-4 py-2 rounded-full' 
+                      : active
+                        ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-slate-800 px-3 py-1.5 rounded-lg' 
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                  }`}
+                >
+                  {link.icon}
+                  {link.name}
+                </Link>
+              );
+            })}
 
             <div className="w-px h-6 bg-gray-200 dark:bg-gray-700 mx-1"></div>
 
@@ -172,22 +209,27 @@ export const PublicNavbar = () => {
               </form>
 
               <div className="space-y-2">
-                {navLinks.map((link) => (
+                {navLinks.map((link) => {
+                  const active = isActiveLink(link.path);
+                  return (
                     <Link
                     key={link.path}
                     to={link.path}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-lg transition-colors ${
                         link.highlight 
-                        ? 'bg-rose-50 dark:bg-rose-900/20 text-rose-600' 
-                        : location.pathname === link.path 
-                            ? 'bg-gray-100 dark:bg-slate-800 text-gray-900 dark:text-white' 
+                        ? active
+                            ? 'bg-rose-600 text-white shadow-lg'
+                            : 'bg-rose-50 dark:bg-rose-900/20 text-rose-600' 
+                        : active 
+                            ? 'bg-gray-100 dark:bg-slate-800 text-rose-600 dark:text-white' 
                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
                     }`}
                     >
                     {link.icon}
                     {link.name}
                     </Link>
-                ))}
+                  );
+                })}
               </div>
               
               <div className="h-px bg-gray-100 dark:bg-slate-800"></div>
