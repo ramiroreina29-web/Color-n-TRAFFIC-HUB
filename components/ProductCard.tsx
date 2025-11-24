@@ -7,9 +7,10 @@ import { useTheme } from '../contexts/ThemeContext';
 interface ProductCardProps {
   product: Product;
   index: number;
+  categoryColor?: string; // New prop for dynamic color
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, index, categoryColor }) => {
   const { language, t } = useTheme();
 
   // Dynamic Content Logic
@@ -40,8 +41,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index }) => {
         />
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
         
-        {/* Category Badge */}
-        <span className="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide text-indigo-600 dark:text-indigo-400 shadow-sm z-10">
+        {/* Category Badge with Dynamic Color */}
+        <span 
+            className={`absolute top-4 right-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm z-10 ${
+                categoryColor 
+                ? `${categoryColor} text-white` 
+                : 'bg-white/90 dark:bg-slate-900/90 text-indigo-600 dark:text-indigo-400'
+            }`}
+        >
           {product.categoria}
         </span>
 

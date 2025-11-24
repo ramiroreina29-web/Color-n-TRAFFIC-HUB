@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { supabase } from '../services/supabase';
 import { Hero } from '../components/Hero';
 import { ProductCard } from '../components/ProductCard';
@@ -34,6 +34,14 @@ const Home = () => {
   const { t } = useTheme();
   const navigate = useNavigate();
   const modalTriggered = useRef(false);
+
+  // Create a map for fast color lookup: CategoryName -> ColorClass
+  const categoryColorMap = useMemo(() => {
+    return categories.reduce((acc, cat) => {
+      acc[cat.nombre] = cat.color;
+      return acc;
+    }, {} as Record<string, string>);
+  }, [categories]);
 
   useEffect(() => {
     document.title = "Colorín | Premium Coloring Books";
@@ -287,7 +295,7 @@ const Home = () => {
                     <Filter className="w-4 h-4" /> {t('catalog_filter_all')}
                 </button>
 
-                {/* Categories from DB or Fallback if DB is empty but products exist */}
+                {/* Categories from DB */}
                 {categories.length > 0 ? (
                     categories.map(cat => (
                         <button
@@ -295,7 +303,7 @@ const Home = () => {
                             onClick={() => handleCategoryClick(cat.nombre)}
                             className={`px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all duration-300 border ${
                                 activeCategory === cat.nombre 
-                                ? 'bg-rose-600 text-white border-rose-600 shadow-lg scale-105 shadow-rose-500/25' 
+                                ? `${cat.color || 'bg-rose-600'} text-white border-transparent shadow-lg scale-105` 
                                 : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-800 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200'
                             }`}
                         >
@@ -303,7 +311,7 @@ const Home = () => {
                         </button>
                     ))
                 ) : (
-                    // Fallback visual categories if DB is loading or empty, so UI doesn't look broken
+                    // Fallback visual
                     ['Mandalas', 'Infantil', 'Animales'].map((fallbackCat, idx) => (
                         <button
                             key={idx}
@@ -354,7 +362,12 @@ const Home = () => {
           <>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {displayedProducts.map((product, idx) => (
-                <ProductCard key={product.id} product={product} index={idx} />
+                <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    index={idx} 
+                    categoryColor={categoryColorMap[product.categoria]}
+                />
               ))}
             </div>
             

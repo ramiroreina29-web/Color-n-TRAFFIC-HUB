@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { Product, Category } from '../types';
@@ -22,6 +22,14 @@ const Catalog = () => {
   const [searchText, setSearchText] = useState(queryParam);
   
   const { t } = useTheme();
+
+  // Create a map for fast color lookup: CategoryName -> ColorClass
+  const categoryColorMap = useMemo(() => {
+    return categories.reduce((acc, cat) => {
+      acc[cat.nombre] = cat.color;
+      return acc;
+    }, {} as Record<string, string>);
+  }, [categories]);
 
   useEffect(() => {
     document.title = "Catálogo | Colorín"; // SEO
@@ -165,7 +173,7 @@ const Catalog = () => {
                             onClick={() => setActiveCategory(cat.nombre)}
                             className={`px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all duration-300 border ${
                                 activeCategory === cat.nombre 
-                                ? 'bg-rose-600 text-white border-rose-600 shadow-lg shadow-rose-500/30 scale-105' 
+                                ? `${cat.color || 'bg-rose-600'} text-white border-transparent shadow-lg scale-105` 
                                 : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-800 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200'
                             }`}
                             >
@@ -201,7 +209,12 @@ const Catalog = () => {
           <>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {filteredProducts.map((product, idx) => (
-                <ProductCard key={product.id} product={product} index={idx} />
+                <ProductCard 
+                    key={product.id} 
+                    product={product} 
+                    index={idx}
+                    categoryColor={categoryColorMap[product.categoria]}
+                />
               ))}
             </div>
             
