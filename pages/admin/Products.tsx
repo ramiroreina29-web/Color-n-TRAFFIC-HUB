@@ -125,9 +125,9 @@ const Products = () => {
 
       const payload = {
         titulo: formData.titulo,
-        titulo_en: formData.titulo_en, // Added
+        titulo_en: formData.titulo_en,
         descripcion: formData.descripcion,
-        descripcion_en: formData.descripcion_en, // Added
+        descripcion_en: formData.descripcion_en,
         precio: formData.precio,
         precio_anterior: formData.precio_anterior || null,
         categoria: formData.categoria,
@@ -164,6 +164,13 @@ const Products = () => {
       setSaving(false);
       setUploading(false);
     }
+  };
+
+  // Helper to remove an image from the existing array (visual only until saved, but here we just update state)
+  const removeGalleryImage = (indexToRemove: number) => {
+      const currentImages = formData.imagenes || [];
+      const newImages = currentImages.filter((_, idx) => idx !== indexToRemove);
+      setFormData({ ...formData, imagenes: newImages });
   };
 
   return (
@@ -245,7 +252,7 @@ const Products = () => {
         {/* Modal */}
         {modalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-                {/* ADDED text-gray-900 to force text color reset inside white modal */}
+                {/* FORCE TEXT DARK: Added text-gray-900 to ensure contrast in light modal within dark mode apps */}
                 <div className="bg-white text-gray-900 rounded-3xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white/90 backdrop-blur z-10">
                         <div>
@@ -400,6 +407,51 @@ const Products = () => {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+
+                                {/* Gallery Images Input - Explicitly Included */}
+                                <div>
+                                    <label className="label-text">Galería / Imágenes Extra</label>
+                                    <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-50 transition-colors relative group">
+                                        <input
+                                            type="file"
+                                            multiple
+                                            accept="image/*"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={e => setGalleryFiles(e.target.files)}
+                                        />
+                                        <div className="py-4">
+                                            <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2 text-gray-400">
+                                                <ImageIcon className="w-5 h-5"/>
+                                            </div>
+                                            <p className="text-sm text-gray-500 font-medium">
+                                                {galleryFiles && galleryFiles.length > 0
+                                                    ? `${galleryFiles.length} archivos nuevos seleccionados`
+                                                    : "Subir imágenes de referencia"}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Gallery Preview */}
+                                    {formData.imagenes && formData.imagenes.length > 0 && (
+                                        <div className="mt-4">
+                                            <p className="text-xs font-bold text-gray-500 mb-2">Imágenes actuales:</p>
+                                            <div className="grid grid-cols-4 gap-2">
+                                                {formData.imagenes.map((img, idx) => (
+                                                    <div key={idx} className="aspect-square rounded-lg overflow-hidden border border-gray-200 relative group">
+                                                        <img src={img} className="w-full h-full object-cover" alt={`Gallery ${idx}`} />
+                                                        <button 
+                                                            type="button"
+                                                            onClick={() => removeGalleryImage(idx)}
+                                                            className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                        >
+                                                            <X className="w-3 h-3" />
+                                                        </button>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="pt-4 border-t border-gray-100 space-y-4">

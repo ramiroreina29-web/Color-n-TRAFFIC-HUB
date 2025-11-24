@@ -27,50 +27,105 @@ const Dashboard = () => {
   const fetchData = async () => {
     setLoadingData(true);
     try {
-        const today = new Date().toISOString().split('T')[0];
+        // --- 1. Calculate Date Ranges ---
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0]; // UTC Date String YYYY-MM-DD
+        
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const thirtyDaysStr = thirtyDaysAgo.toISOString().split('T')[0];
 
-        // 1. Fetch Today's Metrics (Using the View)
-        const { data: todayMetrics, error: metricsError } = await supabase
-        .from('metricas_diarias') 
-        .select('*')
-        .eq('fecha', today)
-        .maybeSingle(); // Use maybeSingle to avoid 406 error if no rows
+        // --- 2. Fetch ALL Raw Metrics (Last 30 Days) ---
+        // We fetch everything once and aggregate in JS to avoid SQL View dependency and Date matching issues
+        const { data: rawMetrics, error: metricsError } = await supabase
+            .from('metricas_visitas')
+            .select('producto_id, fecha, visitas, clics_payhip')
+            .gte('fecha', thirtyDaysStr);
 
-        // 2. Count Active Products
+        if (metricsError) console.error("Error fetching metrics:", metricsError);
+
+        const safeMetrics = rawMetrics || [];
+
+        // --- 3. Process "Today's" Stats ---
+        // We normalize the date from DB to ensure it matches todayStr regardless of timestamp format
+        const todayMetrics = safeMetrics.filter(m => {
+            const rowDate = typeof m.fecha === 'string' ? m.fecha.split('T')[0] : '';
+            return rowDate === todayStr;
+        });
+
+        const tVisits = todayMetrics.reduce((acc, curr) => acc + (curr.visitas || 0), 0);
+        const tClicks = todayMetrics.reduce((acc, curr) => acc + (curr.clics_payhip || 0), 0);
+
+        // --- 4. Count Active Products ---
         const { count } = await supabase
-        .from('productos')
-        .select('*', { count: 'exact', head: true })
-        .eq('activo', true);
+            .from('productos')
+            .select('*', { count: 'exact', head: true })
+            .eq('activo', true);
 
-        // 3. Fetch Chart Data (Last 7 days)
-        const { data: history } = await supabase
-        .from('metricas_diarias')
-        .select('*')
-        .order('fecha', { ascending: true })
-        .limit(7);
+        // --- 5. Process Chart Data (Last 7 Days) ---
+        const historyMap = new Map<string, {fecha: string, visitas: number, clics_payhip: number}>();
+        
+        // Initialize last 7 days with 0
+        for(let i=6; i>=0; i--) {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const dStr = d.toISOString().split('T')[0];
+            historyMap.set(dStr, { fecha: dStr, visitas: 0, clics_payhip: 0 });
+        }
 
-        // 4. Fetch Products with Stats (The View created in SQL)
-        // Ordering by visits to show "Interest"
-        const { data: prods, error: prodsError } = await supabase
-        .from('productos_con_stats')
-        .select('*')
-        .order('visitas', { ascending: false }) // Sort by visits descending to show most interested
-        .limit(10);
+        // Fill with real data
+        safeMetrics.forEach(m => {
+            const dStr = typeof m.fecha === 'string' ? m.fecha.split('T')[0] : '';
+            if (historyMap.has(dStr)) {
+                const entry = historyMap.get(dStr)!;
+                entry.visitas += (m.visitas || 0);
+                entry.clics_payhip += (m.clics_payhip || 0);
+            }
+        });
+        
+        const history = Array.from(historyMap.values()).sort((a,b) => a.fecha.localeCompare(b.fecha));
 
-        if (metricsError && metricsError.code !== 'PGRST116') console.error("Metrics View Error:", metricsError);
-        if (prodsError) console.error("Products View Error:", prodsError);
+        // --- 6. Process Top Products (Aggregate all 30 days) ---
+        const productStatsMap: Record<string, {v: number, c: number}> = {};
+        safeMetrics.forEach(m => {
+             if (!productStatsMap[m.producto_id]) productStatsMap[m.producto_id] = {v:0, c:0};
+             productStatsMap[m.producto_id].v += (m.visitas || 0);
+             productStatsMap[m.producto_id].c += (m.clics_payhip || 0);
+        });
 
-        const tVisits = todayMetrics?.visitas || 0;
-        const tClicks = todayMetrics?.clics_payhip || 0;
+        // Fetch actual product details
+        const { data: allProducts } = await supabase
+            .from('productos')
+            .select('id, titulo, portada_url, categoria, activo')
+            .eq('activo', true);
+        
+        let prodsData: Product[] = [];
+        if (allProducts) {
+             prodsData = allProducts.map(p => ({
+                 ...p,
+                 // Add the aggregated stats to the product object (casting strictly for TS)
+                 visitas: productStatsMap[p.id]?.v || 0,
+                 clics_payhip: productStatsMap[p.id]?.c || 0,
+                 // Required Product fields that might be missing in this partial select, filling defaults
+                 descripcion: '',
+                 precio: 0,
+                 imagenes: [],
+                 payhip_link: '',
+                 created_at: '',
+                 updated_at: ''
+             } as Product))
+             .sort((a, b) => (b.visitas || 0) - (a.visitas || 0))
+             .slice(0, 10);
+        }
 
         setStats({
-        todayVisits: tVisits,
-        todayClicks: tClicks,
-        conversionRate: tVisits > 0 ? (tClicks / tVisits) * 100 : 0,
-        activeProducts: count || 0
+            todayVisits: tVisits,
+            todayClicks: tClicks,
+            conversionRate: tVisits > 0 ? (tClicks / tVisits) * 100 : 0,
+            activeProducts: count || 0
         });
-        setChartData(history || []);
-        setTopProducts(prods || []);
+        setChartData(history);
+        setTopProducts(prodsData);
     } catch (err) {
         console.error("Dashboard fetch error:", err);
     } finally {
@@ -232,8 +287,8 @@ const Dashboard = () => {
         {/* Top Products Table */}
         <div className="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
             <div className="p-8 border-b border-gray-50 flex justify-between items-center">
-                <h3 className="text-lg font-bold text-gray-800">Interés por Producto (Total Histórico)</h3>
-                <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-bold">Ordenado por Visitas</span>
+                <h3 className="text-lg font-bold text-gray-800">Interés por Producto</h3>
+                <span className="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md font-bold">Últimos 30 días</span>
             </div>
             <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm text-gray-600">
