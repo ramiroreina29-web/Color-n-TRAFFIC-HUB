@@ -3,12 +3,14 @@ import { Footer } from '../../components/Footer';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
+import { SEO } from '../../components/SEO';
 
 const PrivacyPolicy = () => {
   const { t, language } = useTheme();
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+      <SEO title={t('legal_privacy')} />
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-rose-600 font-bold transition-colors">

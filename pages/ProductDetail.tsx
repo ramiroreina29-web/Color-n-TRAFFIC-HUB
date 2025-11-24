@@ -8,6 +8,7 @@ import { Button } from '../components/ui/Button';
 import { Footer } from '../components/Footer';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { useTheme } from '../contexts/ThemeContext';
+import { SEO } from '../components/SEO';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -91,20 +92,7 @@ const ProductDetail = () => {
     };
 
     loadData();
-
-    // Cleanup title on unmount
-    return () => {
-      document.title = "Colorín | Premium Coloring Books";
-    };
   }, [id]);
-
-  useEffect(() => {
-    if (product) {
-       // SEO TITLE UPDATE - DYNAMIC based on language
-       const title = (language === 'en' && product.titulo_en) ? product.titulo_en : product.titulo;
-       document.title = `${title} | Colorín`;
-    }
-  }, [product, language]);
 
   const handlePayhipClick = () => {
     if (product) {
@@ -186,6 +174,13 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
+        <SEO 
+            title={displayTitle}
+            description={displayDesc?.substring(0, 160) || `Comprar ${displayTitle} - Libro para colorear PDF`}
+            image={product.portada_url}
+            type="product"
+            keywords={`${displayCategory}, coloring book, pdf, ${displayTitle}`}
+        />
         <PublicNavbar />
         
         {/* Breadcrumb */}

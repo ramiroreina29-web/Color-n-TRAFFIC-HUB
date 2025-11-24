@@ -7,6 +7,7 @@ import { Footer } from '../components/Footer';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { Search, X, Layers } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+import { SEO } from '../components/SEO';
 
 const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -40,8 +41,6 @@ const Catalog = () => {
   }, [categories, language]);
 
   useEffect(() => {
-    document.title = "Catálogo | Colorín"; // SEO
-    
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -103,7 +102,7 @@ const Catalog = () => {
   // 1. Search Query
   if (queryParam) {
       pageTitle = `Resultados para: "${queryParam}"`;
-      pageDescription = `Buscando libros que coincidan...`;
+      pageDescription = `Buscando libros que coincidan con "${queryParam}"`;
       const lowerQ = queryParam.toLowerCase().trim();
       filteredProducts = products.filter(p => 
           p.titulo.toLowerCase().includes(lowerQ) || 
@@ -126,6 +125,11 @@ const Catalog = () => {
       filteredProducts = products.filter(p => 
           p.categoria && p.categoria.trim().toLowerCase() === activeCategory.trim().toLowerCase()
       );
+      // Update Title for SEO
+      const displayCat = (language === 'en' && categoryTranslationMap[activeCategory.trim().toLowerCase()]) 
+        ? categoryTranslationMap[activeCategory.trim().toLowerCase()] 
+        : activeCategory;
+      pageTitle = displayCat;
   }
 
   const getCategoryDisplayName = (cat: Category) => {
@@ -134,6 +138,10 @@ const Catalog = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
+      <SEO 
+        title={pageTitle} 
+        description={pageDescription}
+      />
       <PublicNavbar />
 
       <div className="flex-1 max-w-7xl mx-auto px-4 py-24 w-full">

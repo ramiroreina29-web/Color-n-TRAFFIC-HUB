@@ -10,6 +10,7 @@ import { Filter, X, Gift, Download, Heart, Palette, Download as DownloadIcon, Se
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { useTheme } from '../contexts/ThemeContext';
+import { SEO } from '../components/SEO';
 
 const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -52,8 +53,6 @@ const Home = () => {
   }, [categories, language]);
 
   useEffect(() => {
-    document.title = "Colorín | Premium Coloring Books";
-
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -230,6 +229,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans overflow-x-hidden flex flex-col transition-colors duration-300">
+      <SEO />
       <PublicNavbar />
       
       <Hero products={heroProducts} />
