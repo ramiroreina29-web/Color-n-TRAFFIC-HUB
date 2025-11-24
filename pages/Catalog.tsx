@@ -97,12 +97,13 @@ const Catalog = () => {
   // --- FILTER LOGIC ---
   let filteredProducts = products;
   let pageTitle = t('catalog_title');
-  let pageDescription = "Explora nuestra colección completa.";
+  // Dynamic Description Logic
+  let pageDescription = t('catalog_subtitle_default');
 
   // 1. Search Query
   if (queryParam) {
       pageTitle = `Resultados para: "${queryParam}"`;
-      pageDescription = `Buscando libros que coincidan con "${queryParam}"`;
+      pageDescription = `${t('catalog_subtitle_search')} "${queryParam}"`;
       const lowerQ = queryParam.toLowerCase().trim();
       filteredProducts = products.filter(p => 
           p.titulo.toLowerCase().includes(lowerQ) || 
@@ -112,11 +113,13 @@ const Catalog = () => {
   // 2. Special Filters (New / Offers)
   else if (filterParam === 'new') {
       pageTitle = t('filter_new') + " 🚀";
+      pageDescription = t('catalog_subtitle_new');
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
       filteredProducts = products.filter(p => new Date(p.created_at) > thirtyDaysAgo);
   } else if (filterParam === 'offers') {
       pageTitle = t('filter_offers') + " 🔥";
+      pageDescription = t('catalog_subtitle_offers');
       filteredProducts = products.filter(p => p.precio_anterior && p.precio_anterior > p.precio);
   } 
   // 3. Category Filter
@@ -148,7 +151,7 @@ const Catalog = () => {
         {/* Header */}
         <div className="text-center mb-12 animate-fade-in">
             <h1 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 leading-tight">{pageTitle}</h1>
-            <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-8">{pageDescription}</p>
+            <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-8 transition-all duration-300">{pageDescription}</p>
             
             {/* Search Bar - INSIDE CATALOG PAGE as requested */}
             <div className="max-w-lg mx-auto relative group">

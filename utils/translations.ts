@@ -58,7 +58,12 @@ export const translations = {
     cookie_accept: "Aceptar Todo",
     cookie_close: "Cerrar",
     // Legal Pages Generic
-    last_updated: "Última actualización:"
+    last_updated: "Última actualización:",
+    // Dynamic Catalog Subtitles
+    catalog_subtitle_default: "Explora nuestra colección completa de libros para colorear.",
+    catalog_subtitle_new: "Descubre las últimas novedades recién añadidas a la tienda.",
+    catalog_subtitle_offers: "Aprovecha precios especiales y descuentos por tiempo limitado.",
+    catalog_subtitle_search: "Buscando libros que coincidan con"
   },
   en: {
     hero_cta: "View Book",
@@ -117,6 +122,11 @@ export const translations = {
     cookie_accept: "Accept All",
     cookie_close: "Close",
     // Legal Pages Generic
-    last_updated: "Last updated:"
+    last_updated: "Last updated:",
+    // Dynamic Catalog Subtitles
+    catalog_subtitle_default: "Explore our complete collection of coloring books.",
+    catalog_subtitle_new: "Discover the latest additions fresh to the store.",
+    catalog_subtitle_offers: "Take advantage of special prices and limited-time discounts.",
+    catalog_subtitle_search: "Searching for books matching"
   }
 };
