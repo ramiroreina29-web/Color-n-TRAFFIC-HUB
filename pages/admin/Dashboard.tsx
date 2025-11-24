@@ -19,13 +19,14 @@ const Dashboard = () => {
   const location = useLocation();
 
   useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000); // 30s auto-refresh
+    fetchData(false); // Initial load (show loading spinner)
+    const interval = setInterval(() => fetchData(true), 30000); // 30s auto-refresh (silent)
     return () => clearInterval(interval);
   }, []);
 
-  const fetchData = async () => {
-    setLoadingData(true);
+  const fetchData = async (isBackground = false) => {
+    if (!isBackground) setLoadingData(true);
+    
     try {
         // --- 1. Calculate Date Ranges ---
         const today = new Date();
@@ -36,18 +37,21 @@ const Dashboard = () => {
         const thirtyDaysStr = thirtyDaysAgo.toISOString().split('T')[0];
 
         // --- 2. Fetch ALL Raw Metrics (Last 30 Days) ---
-        // We fetch everything once and aggregate in JS to avoid SQL View dependency and Date matching issues
         const { data: rawMetrics, error: metricsError } = await supabase
             .from('metricas_visitas')
             .select('producto_id, fecha, visitas, clics_payhip')
             .gte('fecha', thirtyDaysStr);
 
-        if (metricsError) console.error("Error fetching metrics:", metricsError);
+        // CRITICAL FIX: If fetch fails, DO NOT reset stats to zero. Keep previous state.
+        if (metricsError) {
+            console.error("Error fetching metrics (keeping old data):", metricsError);
+            if (!isBackground) setLoadingData(false);
+            return; 
+        }
 
         const safeMetrics = rawMetrics || [];
 
         // --- 3. Process "Today's" Stats ---
-        // We normalize the date from DB to ensure it matches todayStr regardless of timestamp format
         const todayMetrics = safeMetrics.filter(m => {
             const rowDate = typeof m.fecha === 'string' ? m.fecha.split('T')[0] : '';
             return rowDate === todayStr;
@@ -57,10 +61,12 @@ const Dashboard = () => {
         const tClicks = todayMetrics.reduce((acc, curr) => acc + (curr.clics_payhip || 0), 0);
 
         // --- 4. Count Active Products ---
-        const { count } = await supabase
+        const { count, error: countError } = await supabase
             .from('productos')
             .select('*', { count: 'exact', head: true })
             .eq('activo', true);
+        
+        if (countError) console.warn("Error counting products:", countError);
 
         // --- 5. Process Chart Data (Last 7 Days) ---
         const historyMap = new Map<string, {fecha: string, visitas: number, clics_payhip: number}>();
@@ -103,33 +109,29 @@ const Dashboard = () => {
         if (allProducts) {
              prodsData = allProducts.map(p => ({
                  ...p,
-                 // Add the aggregated stats to the product object (casting strictly for TS)
                  visitas: productStatsMap[p.id]?.v || 0,
                  clics_payhip: productStatsMap[p.id]?.c || 0,
-                 // Required Product fields that might be missing in this partial select, filling defaults
-                 descripcion: '',
-                 precio: 0,
-                 imagenes: [],
-                 payhip_link: '',
-                 created_at: '',
-                 updated_at: ''
+                 // Defaults for TS
+                 descripcion: '', precio: 0, imagenes: [], payhip_link: '', created_at: '', updated_at: ''
              } as Product))
              .sort((a, b) => (b.visitas || 0) - (a.visitas || 0))
              .slice(0, 10);
         }
 
+        // Only update state if we successfully processed everything
         setStats({
             todayVisits: tVisits,
             todayClicks: tClicks,
             conversionRate: tVisits > 0 ? (tClicks / tVisits) * 100 : 0,
-            activeProducts: count || 0
+            activeProducts: count || stats.activeProducts // Fallback to old count if new is null
         });
         setChartData(history);
         setTopProducts(prodsData);
+
     } catch (err) {
-        console.error("Dashboard fetch error:", err);
+        console.error("Dashboard fetch unexpected error:", err);
     } finally {
-        setLoadingData(false);
+        if (!isBackground) setLoadingData(false);
     }
   };
 
@@ -199,9 +201,9 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center gap-3">
                 <button 
-                    onClick={fetchData} 
+                    onClick={() => fetchData(false)} 
                     className={`p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 text-gray-600 transition-all ${loadingData ? 'animate-spin' : ''}`}
-                    title="Refrescar datos"
+                    title="Refrescar datos manualmente"
                 >
                     <RefreshCw className="w-5 h-5"/>
                 </button>

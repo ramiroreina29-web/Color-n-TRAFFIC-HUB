@@ -16,6 +16,7 @@ import Subscribers from './pages/admin/Subscribers';
 import NotFound from './pages/NotFound';
 import { CookieConsent } from './components/CookieConsent';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { ScrollToTopButton } from './components/ui/ScrollToTopButton';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -78,6 +79,7 @@ const App: React.FC = () => {
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        <ScrollToTopButton />
         <CookieConsent />
       </HashRouter>
     </ThemeProvider>
