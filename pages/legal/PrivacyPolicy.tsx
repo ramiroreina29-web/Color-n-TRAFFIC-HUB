@@ -4,28 +4,31 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { SEO } from '../../components/SEO';
+import { PublicNavbar } from '../../components/PublicNavbar';
 
 const PrivacyPolicy = () => {
   const { t, language } = useTheme();
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans flex flex-col transition-colors duration-300">
       <SEO title={t('legal_privacy')} />
-      <div className="bg-white border-b border-gray-100">
+      <PublicNavbar />
+      
+      <div className="bg-white dark:bg-slate-900 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-2 text-gray-500 hover:text-rose-600 font-bold transition-colors">
+            <Link to="/" className="flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-rose-600 dark:hover:text-rose-400 font-bold transition-colors">
                 <ArrowLeft className="w-5 h-5" /> {t('back_home')}
             </Link>
-            <Shield className="w-6 h-6 text-gray-300" />
+            <Shield className="w-6 h-6 text-gray-300 dark:text-gray-600" />
         </div>
       </div>
 
       <div className="flex-1 max-w-4xl mx-auto px-6 py-16">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100">
-            <h1 className="text-4xl font-black text-gray-900 mb-2">{t('legal_privacy')}</h1>
-            <p className="text-gray-500 mb-10 text-lg">{t('last_updated')} {new Date().toLocaleDateString()}</p>
+        <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 dark:border-slate-800">
+            <h1 className="text-4xl font-black text-gray-900 dark:text-white mb-2">{t('legal_privacy')}</h1>
+            <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">{t('last_updated')} {new Date().toLocaleDateString()}</p>
 
-            <div className="prose prose-rose max-w-none text-gray-600">
+            <div className="prose prose-rose dark:prose-invert max-w-none text-gray-600 dark:text-gray-300">
                 {language === 'es' ? (
                     <>
                         <p>En <strong>Colorín Hub</strong>, nos tomamos muy en serio tu privacidad. Esta política describe cómo recopilamos, usamos y protegemos tu información personal.</p>

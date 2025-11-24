@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SEOProps {
   title?: string;
@@ -10,54 +11,82 @@ interface SEOProps {
 }
 
 export const SEO: React.FC<SEOProps> = ({ title, description, image, url, type, keywords }) => {
+  const { language } = useTheme();
+
   useEffect(() => {
-    // 1. Update Document Title
+    // 1. Base Variables
     const siteName = "Colorín Hub";
     const finalTitle = title ? `${title} | ${siteName}` : `${siteName} | Premium Coloring Books`;
+    const defaultDesc = language === 'es' 
+        ? "Descarga libros para colorear premium en PDF y vectores. Diseños exclusivos de mandalas, animales y arte terapia para imprimir."
+        : "Download premium coloring books in PDF and vector formats. Exclusive mandala, animal, and art therapy designs to print instantly.";
+    
+    const finalDesc = description || defaultDesc;
+    const defaultImage = "https://img.freepik.com/free-vector/mandala-intricate-patterns-black-white_23-2148098520.jpg";
+    const finalImage = image || defaultImage;
+    const currentUrl = url || window.location.href;
+    const finalType = type || 'website';
+    const finalKeywords = keywords || (language === 'es' 
+        ? "libros colorear, pdf colorear, mandalas imprimir, arte terapia digital"
+        : "coloring books, printable coloring pages, digital art therapy, mandala pdf");
+
+    const locale = language === 'es' ? 'es_ES' : 'en_US';
+
+    // 2. Update Document Title
     document.title = finalTitle;
 
-    // 2. Helper to update or create meta tags
-    const updateMeta = (name: string, content: string, isProperty = false) => {
-      let element = isProperty 
-        ? document.querySelector(`meta[property="${name}"]`) 
-        : document.querySelector(`meta[name="${name}"]`);
-
+    // 3. Helper to update meta tags efficiently
+    const setMeta = (selector: string, content: string, attr: 'name' | 'property' = 'name') => {
+      let element = document.querySelector(`meta[${attr}="${selector}"]`);
       if (!element) {
         element = document.createElement('meta');
-        if (isProperty) {
-          element.setAttribute('property', name);
-        } else {
-          element.setAttribute('name', name);
-        }
+        element.setAttribute(attr, selector);
         document.head.appendChild(element);
       }
       element.setAttribute('content', content);
     };
 
-    // 3. Defaults
-    const defaultDesc = "Descarga libros para colorear premium en PDF y vectores. Diseños exclusivos de mandalas, animales y arte terapia para imprimir y colorear al instante.";
-    const defaultImage = "https://img.freepik.com/free-vector/mandala-intricate-patterns-black-white_23-2148098520.jpg";
-    const defaultUrl = window.location.href;
-    const defaultKeywords = "libros colorear, pdf colorear, mandalas imprimir, arte terapia digital, coloring books, printable coloring pages";
+    // 4. Helper to update Link tags (Canonical)
+    const setLink = (rel: string, href: string) => {
+      let element = document.querySelector(`link[rel="${rel}"]`);
+      if (!element) {
+        element = document.createElement('link');
+        element.setAttribute('rel', rel);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('href', href);
+    };
 
-    // 4. Update Meta Tags
-    updateMeta('description', description || defaultDesc);
-    updateMeta('keywords', keywords || defaultKeywords);
-    
-    // Open Graph
-    updateMeta('og:title', finalTitle, true);
-    updateMeta('og:description', description || defaultDesc, true);
-    updateMeta('og:image', image || defaultImage, true);
-    updateMeta('og:url', url || defaultUrl, true);
-    updateMeta('og:type', type || 'website', true);
+    // --- EXECUTE UPDATES ---
 
-    // Twitter
-    updateMeta('twitter:title', finalTitle);
-    updateMeta('twitter:description', description || defaultDesc);
-    updateMeta('twitter:image', image || defaultImage);
-    updateMeta('twitter:card', 'summary_large_image');
+    // Standard Meta
+    setMeta('description', finalDesc);
+    setMeta('keywords', finalKeywords);
+    setMeta('author', 'Colorín Hub Team');
 
-  }, [title, description, image, url, type, keywords]);
+    // Open Graph (Facebook/LinkedIn/WhatsApp)
+    setMeta('og:site_name', siteName, 'property');
+    setMeta('og:title', finalTitle, 'property');
+    setMeta('og:description', finalDesc, 'property');
+    setMeta('og:image', finalImage, 'property');
+    setMeta('og:url', currentUrl, 'property');
+    setMeta('og:type', finalType, 'property');
+    setMeta('og:locale', locale, 'property');
+
+    // Twitter Cards
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', finalTitle);
+    setMeta('twitter:description', finalDesc);
+    setMeta('twitter:image', finalImage);
+
+    // Canonical URL (Critical for SEO to avoid duplicate content)
+    setLink('canonical', currentUrl);
+
+    // Cleanup function? 
+    // Usually not strictly necessary for SPAs unless we want to remove tags on unmount, 
+    // but overwriting them on the next page load is standard practice for client-side routing.
+
+  }, [title, description, image, url, type, keywords, language]);
 
   return null;
 };
