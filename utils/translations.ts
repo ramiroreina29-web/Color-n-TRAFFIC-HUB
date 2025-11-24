@@ -51,7 +51,14 @@ export const translations = {
     video_title: "Mira el interior",
     video_desc: "Un vistazo rápido a lo que recibirás",
     free_demo: "Prueba Gratis",
-    download_demo: "Descargar Demo"
+    download_demo: "Descargar Demo",
+    // Cookies Modal
+    cookie_title: "Usamos Cookies 🍪",
+    cookie_desc: "Utilizamos cookies para mejorar tu experiencia, analizar el tráfico y personalizar el contenido. Al continuar navegando, aceptas nuestra",
+    cookie_accept: "Aceptar Todo",
+    cookie_close: "Cerrar",
+    // Legal Pages Generic
+    last_updated: "Última actualización:"
   },
   en: {
     hero_cta: "View Book",
@@ -103,6 +110,13 @@ export const translations = {
     video_title: "Look Inside",
     video_desc: "A quick glimpse of what you'll get",
     free_demo: "Free Trial",
-    download_demo: "Download Demo"
+    download_demo: "Download Demo",
+    // Cookies Modal
+    cookie_title: "We use Cookies 🍪",
+    cookie_desc: "We use cookies to improve your experience, analyze traffic, and personalize content. By continuing to browse, you agree to our",
+    cookie_accept: "Accept All",
+    cookie_close: "Close",
+    // Legal Pages Generic
+    last_updated: "Last updated:"
   }
 };

@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Cookie, X, Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
 export const CookieConsent = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const { t } = useTheme();
 
   useEffect(() => {
     const consent = localStorage.getItem('colorin_cookie_consent');
@@ -31,23 +33,22 @@ export const CookieConsent = () => {
             <Cookie className="w-6 h-6 text-rose-600" />
           </div>
           <div>
-            <h4 className="font-bold text-gray-900 mb-2">Usamos Cookies 🍪</h4>
+            <h4 className="font-bold text-gray-900 mb-2">{t('cookie_title')}</h4>
             <p className="text-sm text-gray-600 mb-4 leading-relaxed">
-              Utilizamos cookies para mejorar tu experiencia, analizar el tráfico y personalizar el contenido. 
-              Al continuar navegando, aceptas nuestra <Link to="/cookies-policy" className="text-rose-600 hover:underline font-bold">Política de Cookies</Link>.
+              {t('cookie_desc')} <Link to="/cookies-policy" className="text-rose-600 hover:underline font-bold">{t('legal_cookies')}</Link>.
             </p>
             <div className="flex gap-3">
               <button 
                 onClick={handleAccept}
                 className="flex-1 bg-gray-900 hover:bg-black text-white px-4 py-2.5 rounded-xl text-sm font-bold transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2"
               >
-                <Check className="w-4 h-4" /> Aceptar Todo
+                <Check className="w-4 h-4" /> {t('cookie_accept')}
               </button>
               <button 
                 onClick={() => setIsVisible(false)}
                 className="px-4 py-2.5 rounded-xl text-sm font-bold text-gray-500 hover:bg-gray-100 transition-colors"
               >
-                Cerrar
+                {t('cookie_close')}
               </button>
             </div>
           </div>
