@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../services/supabase';
-import { Product, Review } from '../types';
+import { Product, Review, Category } from '../types';
 import { useProductTracking, trackPayhipClick } from '../services/tracking';
 import { ExternalLink, Check, ChevronRight, Home, ShieldCheck, Star, Download, Send, CheckCircle, Flame, TrendingUp, ArrowRight, ShoppingBag } from 'lucide-react';
 import { Button } from '../components/ui/Button';
@@ -15,6 +15,7 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState<string>('');
   const [related, setRelated] = useState<Product[]>([]);
+  const [categoryMap, setCategoryMap] = useState<Record<string, string>>({});
   
   // Reviews State
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -67,6 +68,19 @@ const ProductDetail = () => {
             
         if (reviewsData) {
             setReviews(reviewsData);
+        }
+
+        // 4. Fetch Categories for Translation
+        const { data: catData } = await supabase
+            .from('categorias')
+            .select('nombre, nombre_en');
+        
+        if (catData) {
+            const map: Record<string, string> = {};
+            catData.forEach((c: any) => {
+                if (c.nombre) map[c.nombre.trim().toLowerCase()] = c.nombre_en;
+            });
+            setCategoryMap(map);
         }
 
       } catch (err) {
@@ -159,6 +173,10 @@ const ProductDetail = () => {
   // Language Logic
   const displayTitle = (language === 'en' && product.titulo_en) ? product.titulo_en : product.titulo;
   const displayDesc = (language === 'en' && product.descripcion_en) ? product.descripcion_en : product.descripcion;
+  
+  // Category Translation Logic
+  const catKey = product.categoria?.trim().toLowerCase() || '';
+  const displayCategory = (language === 'en' && categoryMap[catKey]) ? categoryMap[catKey] : product.categoria;
 
   // Discount Logic
   const hasDiscount = product.precio_anterior && product.precio_anterior > product.precio;
@@ -175,7 +193,7 @@ const ProductDetail = () => {
             <div className="max-w-7xl mx-auto px-4 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
                 <Link to="/" className="hover:text-rose-600 transition-colors"><Home className="w-4 h-4"/></Link>
                 <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600" />
-                <span className="font-medium">{product.categoria}</span>
+                <span className="font-medium">{displayCategory}</span>
                 <ChevronRight className="w-4 h-4 text-gray-300 dark:text-gray-600" />
                 <span className="text-gray-900 dark:text-white font-bold truncate">{displayTitle}</span>
             </div>
@@ -215,7 +233,7 @@ const ProductDetail = () => {
           <div className="flex flex-col justify-start pt-4">
             <div className="mb-4 flex items-center gap-3">
                 <span className="inline-block px-4 py-1.5 rounded-full bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-300 text-xs font-bold tracking-wider uppercase">
-                    {product.categoria}
+                    {displayCategory}
                 </span>
                 <div className="flex items-center gap-1 text-yellow-400">
                     {[1,2,3,4,5].map(i => <Star key={i} className={`w-4 h-4 ${i <= Math.round(Number(averageRating)) ? 'fill-current text-yellow-400' : 'text-gray-300 dark:text-slate-600'}`}/>)}
@@ -324,7 +342,7 @@ const ProductDetail = () => {
                 <div>
                      <h3 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{t('related_products')}</h3>
                      <p className="text-rose-600 dark:text-rose-400 font-medium text-sm mt-1 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4" /> {t('most_popular')} {product.categoria}
+                        <TrendingUp className="w-4 h-4" /> {t('most_popular')} {displayCategory}
                      </p>
                 </div>
             </div>

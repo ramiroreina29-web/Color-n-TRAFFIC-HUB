@@ -31,20 +31,25 @@ const Home = () => {
   const [subscribed, setSubscribed] = useState(false);
   const [leadMagnetUrl, setLeadMagnetUrl] = useState('');
   
-  const { t } = useTheme();
+  const { t, language } = useTheme();
   const navigate = useNavigate();
   const modalTriggered = useRef(false);
 
-  // Create a map for fast color lookup: CategoryName -> ColorClass
-  // Robustness: Use lowercase keys to ensure matching works even with casing differences
-  const categoryColorMap = useMemo(() => {
-    return categories.reduce((acc, cat) => {
-      if (cat.nombre) {
-        acc[cat.nombre.trim().toLowerCase()] = cat.color;
-      }
-      return acc;
-    }, {} as Record<string, string>);
-  }, [categories]);
+  // Create maps for fast lookup
+  const { categoryColorMap, categoryTranslationMap } = useMemo(() => {
+    const colorMap: Record<string, string> = {};
+    const transMap: Record<string, string> = {};
+
+    categories.forEach(cat => {
+        if (cat.nombre) {
+            const key = cat.nombre.trim().toLowerCase();
+            colorMap[key] = cat.color;
+            // Map the spanish lowercase key to the English name (if exists) or Spanish name
+            transMap[key] = (language === 'en' && cat.nombre_en) ? cat.nombre_en : cat.nombre;
+        }
+    });
+    return { categoryColorMap: colorMap, categoryTranslationMap: transMap };
+  }, [categories, language]);
 
   useEffect(() => {
     document.title = "Colorín | Premium Coloring Books";
@@ -212,9 +217,15 @@ const Home = () => {
   const displayedProducts = getFilteredProducts();
 
   const handleCategoryClick = (catName: string) => {
+      // Always set the raw (Spanish) name for filtering logic
       setActiveCategory(catName);
       setSpecialFilter('none');
       setSearchText('');
+  };
+
+  // Helper to get display name for category buttons
+  const getCategoryDisplayName = (cat: Category) => {
+      return (language === 'en' && cat.nombre_en) ? cat.nombre_en : cat.nombre;
   };
 
   return (
@@ -310,7 +321,7 @@ const Home = () => {
                                 : 'bg-white dark:bg-slate-900 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-slate-800 hover:text-rose-600 dark:hover:text-rose-400 hover:border-rose-200'
                             }`}
                         >
-                            {cat.nombre}
+                            {getCategoryDisplayName(cat)}
                         </button>
                     ))
                 ) : (
@@ -364,14 +375,18 @@ const Home = () => {
         ) : (
           <>
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {displayedProducts.map((product, idx) => (
-                <ProductCard 
-                    key={product.id} 
-                    product={product} 
-                    index={idx} 
-                    categoryColor={categoryColorMap[product.categoria?.trim().toLowerCase()]}
-                />
-              ))}
+              {displayedProducts.map((product, idx) => {
+                const catKey = product.categoria?.trim().toLowerCase();
+                return (
+                    <ProductCard 
+                        key={product.id} 
+                        product={product} 
+                        index={idx} 
+                        categoryColor={categoryColorMap[catKey]}
+                        displayCategory={categoryTranslationMap[catKey]}
+                    />
+                );
+              })}
             </div>
             
             {displayedProducts.length === 0 && (
@@ -381,7 +396,7 @@ const Home = () => {
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">
                     {activeCategory !== 'All' 
-                        ? `No hay productos en "${activeCategory}"` 
+                        ? `No hay productos en "${(language === 'en' && categoryTranslationMap[activeCategory.trim().toLowerCase()]) ? categoryTranslationMap[activeCategory.trim().toLowerCase()] : activeCategory}"` 
                         : 'No se encontraron resultados'
                     }
                 </h3>

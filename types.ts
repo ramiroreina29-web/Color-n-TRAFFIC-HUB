@@ -29,6 +29,7 @@ export interface Product {
 export interface Category {
   id: string;
   nombre: string;
+  nombre_en?: string; // New: English Name
   icono: string;
   color: string;
   orden: number;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { Category } from '../../types';
 import { Button } from '../../components/ui/Button';
-import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Layers, ArrowUp, ArrowDown, Tag, Palette, Check } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Layers, ArrowUp, ArrowDown, Tag, Palette, Check, Languages } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Categories = () => {
@@ -11,8 +11,12 @@ const Categories = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   
+  // Tab State for Modal (ES/EN)
+  const [modalLang, setModalLang] = useState<'es' | 'en'>('es');
+  
   const initialFormState: Partial<Category> = {
     nombre: '',
+    nombre_en: '',
     orden: 0,
     activo: true,
     color: 'bg-rose-600',
@@ -54,6 +58,7 @@ const Categories = () => {
   };
 
   const handleOpenModal = (category?: Category) => {
+    setModalLang('es'); // Reset to Spanish default
     if (category) {
       setFormData(category);
     } else {
@@ -83,6 +88,7 @@ const Categories = () => {
     try {
       const payload = {
         nombre: formData.nombre,
+        nombre_en: formData.nombre_en, // Save English name
         orden: formData.orden,
         activo: formData.activo,
         color: formData.color,
@@ -186,8 +192,15 @@ const Categories = () => {
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
                                             {/* Preview del Badge */}
-                                            <div className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm ${cat.color || 'bg-gray-400'}`}>
-                                                {cat.nombre}
+                                            <div className="flex flex-col">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold text-white shadow-sm w-fit ${cat.color || 'bg-gray-400'}`}>
+                                                    {cat.nombre}
+                                                </span>
+                                                {cat.nombre_en && (
+                                                    <span className="text-xs text-gray-400 mt-1 ml-1 flex items-center gap-1">
+                                                        <Languages className="w-3 h-3"/> {cat.nombre_en}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
                                     </td>
@@ -231,26 +244,72 @@ const Categories = () => {
         {/* Modal Creación/Edición */}
         {modalOpen && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in">
-                <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl animate-scale-in overflow-hidden border border-gray-100">
+                <div className="bg-white text-gray-900 rounded-3xl w-full max-w-md shadow-2xl animate-scale-in overflow-hidden border border-gray-100">
                     <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                         <h3 className="text-xl font-bold text-gray-900">{formData.id ? 'Editar Categoría' : 'Nueva Categoría'}</h3>
                         <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-full transition-colors"><X className="w-5 h-5"/></button>
                     </div>
                     
                     <form onSubmit={handleSave} className="p-6 space-y-6">
+                        
+                         {/* Language Toggle Tabs */}
                         <div>
-                            <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
-                                <Tag className="w-4 h-4 text-rose-500"/> Nombre Categoría
-                            </label>
-                            <input 
-                                type="text" 
-                                required 
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-rose-500 outline-none text-gray-900 font-medium placeholder-gray-300 transition-all" 
-                                value={formData.nombre} 
-                                onChange={e => setFormData({...formData, nombre: e.target.value})} 
-                                placeholder="Ej. Mandalas, Animales, Niños..."
-                            />
+                            <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">Idioma</label>
+                            <div className="flex border-b border-gray-200 mb-4">
+                                <button 
+                                    type="button"
+                                    onClick={() => setModalLang('es')} 
+                                    className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+                                        modalLang === 'es' 
+                                        ? 'border-rose-500 text-rose-600 bg-rose-50/50' 
+                                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    🇪🇸 Español
+                                </button>
+                                <button 
+                                    type="button"
+                                    onClick={() => setModalLang('en')} 
+                                    className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
+                                        modalLang === 'en' 
+                                        ? 'border-blue-500 text-blue-600 bg-blue-50/50' 
+                                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                                    }`}
+                                >
+                                    🇺🇸 Inglés
+                                </button>
+                            </div>
                         </div>
+
+                        {modalLang === 'es' ? (
+                            <div className="animate-fade-in">
+                                <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
+                                    <Tag className="w-4 h-4 text-rose-500"/> Nombre Categoría (Español) <span className="text-red-500">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    required 
+                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-rose-500 outline-none text-gray-900 font-medium placeholder-gray-300 transition-all" 
+                                    value={formData.nombre} 
+                                    onChange={e => setFormData({...formData, nombre: e.target.value})} 
+                                    placeholder="Ej. Mandalas, Animales..."
+                                />
+                            </div>
+                        ) : (
+                             <div className="animate-fade-in bg-blue-50/30 p-4 rounded-xl border border-blue-100">
+                                <label className="block text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
+                                    <Languages className="w-4 h-4 text-blue-500"/> English Name (Traducción)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 font-medium placeholder-gray-300 transition-all" 
+                                    value={formData.nombre_en || ''} 
+                                    onChange={e => setFormData({...formData, nombre_en: e.target.value})} 
+                                    placeholder="Ex. Mandalas, Animals..."
+                                />
+                                <p className="text-xs text-gray-400 mt-2">Si lo dejas vacío, se usará el nombre en español.</p>
+                            </div>
+                        )}
 
                         <div>
                             <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
