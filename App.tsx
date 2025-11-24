@@ -10,6 +10,7 @@ import TermsAndConditions from './pages/legal/TermsAndConditions';
 import Login from './pages/admin/Login';
 import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
+import Categories from './pages/admin/Categories';
 import Gallery from './pages/admin/Gallery';
 import Settings from './pages/admin/Settings';
 import Subscribers from './pages/admin/Subscribers';
@@ -72,6 +73,7 @@ const App: React.FC = () => {
           {/* Admin Routes */}
           <Route path="/admin" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/admin/products" element={<ProtectedRoute><Products /></ProtectedRoute>} />
+          <Route path="/admin/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
           <Route path="/admin/gallery" element={<ProtectedRoute><Gallery /></ProtectedRoute>} />
           <Route path="/admin/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/admin/subscribers" element={<ProtectedRoute><Subscribers /></ProtectedRoute>} />

@@ -33,13 +33,19 @@ const Products = () => {
   }, []);
 
   const fetchData = async () => {
-    // Select all columns
-    const { data: prods, error } = await supabase.from('productos').select('*').order('created_at', { ascending: false });
-    const { data: cats } = await supabase.from('categorias').select('*');
+    // 1. Fetch Productos
+    const { data: prods, error: prodError } = await supabase.from('productos').select('*').order('created_at', { ascending: false });
     
-    if (error) {
-        console.error("Error fetching products:", error);
-    }
+    // 2. FETCH CATEGORÍAS (Sincronización Crítica)
+    // Traemos las categorías de la tabla 'categorias' para poblar el dropdown.
+    const { data: cats, error: catError } = await supabase
+        .from('categorias')
+        .select('*')
+        .eq('activo', true) // Solo mostrar categorías activas para nuevos productos
+        .order('orden', { ascending: true });
+    
+    if (prodError) console.error("Error fetching products:", prodError);
+    if (catError) console.error("Error fetching categories:", catError);
     
     if (prods) setProducts(prods);
     if (cats) setCategories(cats);
@@ -364,11 +370,28 @@ const Products = () => {
                                 </div>
 
                                 <div>
-                                    <label className="label-text">Categoría</label>
-                                    <select className="input-field" required value={formData.categoria} onChange={e => setFormData({...formData, categoria: e.target.value})}>
-                                        <option value="">Seleccionar...</option>
-                                        {categories.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+                                    <label className="label-text flex items-center gap-2">
+                                        Categoría
+                                        {categories.length === 0 && <span className="text-xs text-red-500 bg-red-50 px-2 py-0.5 rounded">Sin categorías</span>}
+                                    </label>
+                                    <select 
+                                        className="input-field cursor-pointer" 
+                                        required 
+                                        value={formData.categoria} 
+                                        onChange={e => setFormData({...formData, categoria: e.target.value})}
+                                    >
+                                        <option value="">Seleccionar categoría...</option>
+                                        {categories.map(c => (
+                                            <option key={c.id} value={c.nombre}>
+                                                {c.nombre}
+                                            </option>
+                                        ))}
                                     </select>
+                                    {categories.length === 0 && (
+                                        <Link to="/admin/categories" className="text-xs text-rose-600 font-bold mt-1 hover:underline flex items-center gap-1">
+                                            <Plus className="w-3 h-3"/> Crear Categoría primero
+                                        </Link>
+                                    )}
                                 </div>
 
                                 <div>

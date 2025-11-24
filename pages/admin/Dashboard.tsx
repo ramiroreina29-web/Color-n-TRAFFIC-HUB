@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { DashboardStats, DailyMetric, Product } from '../../types';
-import { Eye, MousePointerClick, TrendingUp, Package, LogOut, LayoutDashboard, ChevronRight, Image as ImageIcon, Settings, Menu, X, RefreshCw, Users } from 'lucide-react';
+import { Eye, MousePointerClick, TrendingUp, Package, LogOut, LayoutDashboard, ChevronRight, Image as ImageIcon, Settings, Menu, X, RefreshCw, Users, Layers } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
@@ -149,6 +149,7 @@ const Dashboard = () => {
         <nav className="flex-1 p-6 space-y-3">
             <NavItem to="/admin" icon={<LayoutDashboard/>} label="Dashboard" active={location.pathname === '/admin'} onClick={() => setMobileMenuOpen(false)} />
             <NavItem to="/admin/products" icon={<Package/>} label="Productos" active={location.pathname === '/admin/products'} onClick={() => setMobileMenuOpen(false)} />
+            <NavItem to="/admin/categories" icon={<Layers/>} label="Categorías" active={location.pathname === '/admin/categories'} onClick={() => setMobileMenuOpen(false)} />
             <NavItem to="/admin/gallery" icon={<ImageIcon/>} label="Galería Muro" active={location.pathname === '/admin/gallery'} onClick={() => setMobileMenuOpen(false)} />
             <NavItem to="/admin/subscribers" icon={<Users/>} label="Suscriptores" active={location.pathname === '/admin/subscribers'} onClick={() => setMobileMenuOpen(false)} />
             <NavItem to="/admin/settings" icon={<Settings/>} label="Configuración" active={location.pathname === '/admin/settings'} onClick={() => setMobileMenuOpen(false)} />
