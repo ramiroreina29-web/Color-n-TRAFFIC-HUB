@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase, BUCKET_NAME } from '../../services/supabase';
 import { ShowcaseItem } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Plus, Trash2, X, Upload, Save, ArrowLeft, Image as ImageIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
+
+const { Link } = ReactRouterDOM;
 
 const Gallery = () => {
   const [items, setItems] = useState<ShowcaseItem[]>([]);

@@ -1,8 +1,11 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { Button } from '../../components/ui/Button';
 import { ArrowLeft, Download, Users, Copy, Check, Mail } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
+
+const { Link } = ReactRouterDOM;
 
 interface Subscriber {
   id: string;

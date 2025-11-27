@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase, BUCKET_NAME } from '../../services/supabase';
 import { Product, Category } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Plus, Edit2, Trash2, X, Upload, Save, ArrowLeft, Image as ImageIcon, Loader2, FileText, Check, Star, Flame, Languages, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
+
+const { Link } = ReactRouterDOM;
 
 const Products = () => {
   const [products, setProducts] = useState<Product[]>([]);

@@ -1,10 +1,13 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { Footer } from '../../components/Footer';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { ArrowLeft, Shield } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 import { SEO } from '../../components/SEO';
 import { PublicNavbar } from '../../components/PublicNavbar';
+
+const { Link } = ReactRouterDOM;
 
 const PrivacyPolicy = () => {
   const { t, language } = useTheme();

@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { Product, Review, Category } from '../types';
 import { useProductTracking, trackPayhipClick } from '../services/tracking';
@@ -9,6 +10,8 @@ import { Footer } from '../components/Footer';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { useTheme } from '../contexts/ThemeContext';
 import { SEO } from '../components/SEO';
+
+const { useParams, Link } = ReactRouterDOM;
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();

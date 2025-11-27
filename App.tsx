@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState } from 'react';
-import { HashRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { supabase } from './services/supabase';
 import Home from './pages/Home';
 import ProductDetail from './pages/ProductDetail';
@@ -18,6 +19,8 @@ import NotFound from './pages/NotFound';
 import { CookieConsent } from './components/CookieConsent';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ScrollToTopButton } from './components/ui/ScrollToTopButton';
+
+const { HashRouter, Routes, Route, Navigate, useLocation } = ReactRouterDOM;
 
 // Scroll to top on route change
 const ScrollToTop = () => {

@@ -1,8 +1,11 @@
+
 import React from 'react';
 import { Product } from '../types';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Eye, ArrowUpRight, Tag, Star } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
+
+const { Link } = ReactRouterDOM;
 
 interface ProductCardProps {
   product: Product;
@@ -29,7 +32,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, catego
 
   return (
     <div 
-      className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-rose-500/10 dark:shadow-none dark:border dark:border-slate-800 transition-all duration-300 hover:-translate-y-2 animate-slide-up"
+      className="group relative bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl hover:shadow-rose-500/10 dark:shadow-none dark:border dark:border-slate-800 transition-all duration-300 hover:-translate-y-2 animate-slide-up w-full"
       style={{ animationDelay: `${index * 50}ms` }}
     >
       {/* Image Container */}
@@ -73,8 +76,8 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, catego
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-1 line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+      <div className="p-4 md:p-5">
+        <h3 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-1 line-clamp-1 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
           {title}
         </h3>
         
@@ -97,7 +100,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, catego
                     ${product.precio_anterior}
                 </span>
             )}
-            <span className={`text-2xl font-extrabold ${hasDiscount ? 'text-rose-600 dark:text-rose-500' : 'text-gray-900 dark:text-white'}`}>
+            <span className={`text-xl md:text-2xl font-extrabold ${hasDiscount ? 'text-rose-600 dark:text-rose-500' : 'text-gray-900 dark:text-white'}`}>
                 ${product.precio}
             </span>
           </div>

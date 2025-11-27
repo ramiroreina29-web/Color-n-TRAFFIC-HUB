@@ -1,6 +1,9 @@
+
 import React from 'react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Home, AlertCircle } from 'lucide-react';
+
+const { Link } = ReactRouterDOM;
 
 const NotFound = () => {
   return (

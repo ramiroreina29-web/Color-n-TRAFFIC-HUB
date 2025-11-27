@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { supabase } from '../services/supabase';
 import { Hero } from '../components/Hero';
@@ -7,10 +8,12 @@ import { Footer } from '../components/Footer';
 import { PublicNavbar } from '../components/PublicNavbar';
 import { Product, Category, ShowcaseItem } from '../types';
 import { Filter, X, Gift, Download, Heart, Palette, Download as DownloadIcon, Search, ArrowUpDown, Flame, Clock, Layers } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { useTheme } from '../contexts/ThemeContext';
 import { SEO } from '../components/SEO';
+
+const { Link, useNavigate } = ReactRouterDOM;
 
 const Home = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -227,17 +230,23 @@ const Home = () => {
       return (language === 'en' && cat.nombre_en) ? cat.nombre_en : cat.nombre;
   };
 
+  // Safe string construction to avoid template literal syntax errors in Vercel
+  const getPageTitle = () => {
+    return t('home_title_1');
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans overflow-x-hidden flex flex-col transition-colors duration-300">
       <SEO />
-      <PublicNavbar />
+      {/* Pass hideSpacer to fix double height on mobile */}
+      <PublicNavbar hideSpacer={true} />
       
       <Hero products={heroProducts} />
 
       <section className="pt-16 pb-12 bg-white dark:bg-slate-950 relative">
         <div className="max-w-4xl mx-auto px-6 text-center">
             <h2 className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6 leading-tight">
-                {t('home_title_1')} <br/>
+                {getPageTitle()} <br/>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 to-purple-600">{t('home_title_2')}</span>
             </h2>
             <p className="text-xl text-gray-500 dark:text-gray-400 leading-relaxed mb-10">
@@ -283,7 +292,7 @@ const Home = () => {
       </section>
 
       {/* Main Catalog */}
-      <section id="catalogo" className="py-10 px-4 md:px-8 max-w-7xl mx-auto relative z-20">
+      <section id="catalogo" className="py-10 px-4 md:px-8 max-w-7xl mx-auto relative z-20 w-full">
         
         {/* Title */}
         <div className="text-center mb-10">
@@ -296,8 +305,9 @@ const Home = () => {
         </div>
 
         {/* --- CATEGORY BAR --- */}
-        <div className="mb-12 overflow-x-auto pb-4 hide-scrollbar">
-            <div className="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-3 px-2">
+        {/* Mobile: Full-bleed scrolling (negative margins), Desktop: Normal */}
+        <div className="mb-8 md:mb-12 overflow-x-auto pb-4 hide-scrollbar -mx-4 px-4 md:mx-0 md:px-0">
+            <div className="flex flex-nowrap md:flex-wrap justify-start md:justify-center gap-3 w-max md:w-full">
                 <button
                     onClick={() => { setActiveCategory('All'); setSpecialFilter('none'); }}
                     className={`px-6 py-2.5 rounded-full font-bold text-sm whitespace-nowrap transition-all duration-300 flex items-center gap-2 border ${
@@ -374,7 +384,8 @@ const Home = () => {
           </div>
         ) : (
           <>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+             {/* Optimized Grid: gap-4 on mobile, gap-8 on desktop. grid-cols-1 on very small, but maybe grid-cols-2 on sm? Standard is 1 col for robust cards */}
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {displayedProducts.map((product, idx) => {
                 const catKey = product.categoria?.trim().toLowerCase();
                 return (

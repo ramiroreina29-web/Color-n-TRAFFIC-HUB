@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase, BUCKET_NAME } from '../../services/supabase';
 import { Button } from '../../components/ui/Button';
 import { Save, Upload, FileText, CheckCircle, ArrowLeft, Instagram, Facebook, Youtube, Twitter, Globe } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { SocialLink } from '../../types';
+
+const { Link } = ReactRouterDOM;
 
 // Helper for icons
 const getIcon = (platform: string) => {

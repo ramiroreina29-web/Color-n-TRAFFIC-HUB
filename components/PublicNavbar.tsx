@@ -1,9 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Menu, X, Lock, Home, Grid, Tag, Moon, Sun, Brush, Search, Rocket } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
-export const PublicNavbar = () => {
+const { Link, useLocation, useNavigate } = ReactRouterDOM;
+
+interface PublicNavbarProps {
+  hideSpacer?: boolean;
+}
+
+export const PublicNavbar: React.FC<PublicNavbarProps> = ({ hideSpacer = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
@@ -257,8 +264,10 @@ export const PublicNavbar = () => {
           </div>
         )}
       </nav>
-      {/* Spacer */}
-      <div className="h-[76px] md:h-[84px] w-full bg-white dark:bg-slate-950"></div>
+      {/* Spacer - Conditional */}
+      {!hideSpacer && (
+         <div className="h-[76px] md:h-[84px] w-full bg-white dark:bg-slate-950"></div>
+      )}
     </>
   );
 };

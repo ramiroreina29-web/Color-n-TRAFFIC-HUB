@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { Category } from '../../types';
 import { Button } from '../../components/ui/Button';
 import { Plus, Edit2, Trash2, X, Save, ArrowLeft, Layers, ArrowUp, ArrowDown, Tag, Palette, Check, Languages } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
+
+const { Link } = ReactRouterDOM;
 
 const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -214,153 +217,113 @@ const Categories = () => {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex justify-end gap-2 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                            <button onClick={() => handleOpenModal(cat)} className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors" title="Editar">
+                                            <button onClick={() => handleOpenModal(cat)} className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
                                                 <Edit2 className="w-4 h-4"/>
                                             </button>
-                                            <button onClick={() => handleDelete(cat.id)} className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors" title="Eliminar">
+                                            <button onClick={() => handleDelete(cat.id)} className="p-2 text-red-600 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
                                                 <Trash2 className="w-4 h-4" />
                                             </button>
                                         </div>
                                     </td>
                                 </tr>
                             ))}
-                            {categories.length === 0 && (
-                                <tr>
-                                    <td colSpan={5} className="text-center py-12">
-                                        <div className="flex flex-col items-center justify-center text-gray-400">
-                                            <Layers className="w-12 h-12 mb-3 text-gray-200" />
-                                            <p className="font-bold">No hay categorías.</p>
-                                            <p className="text-sm">Crea la primera para empezar.</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )}
                         </tbody>
                     </table>
                 </div>
            </div>
         )}
 
-        {/* Modal Creación/Edición */}
+        {/* Modal */}
         {modalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in">
-                <div className="bg-white text-gray-900 rounded-3xl w-full max-w-md shadow-2xl animate-scale-in overflow-hidden border border-gray-100">
-                    <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+                <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl animate-scale-in">
+                    <div className="p-6 border-b border-gray-100 flex justify-between items-center">
                         <h3 className="text-xl font-bold text-gray-900">{formData.id ? 'Editar Categoría' : 'Nueva Categoría'}</h3>
-                        <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-600 p-1 hover:bg-gray-100 rounded-full transition-colors"><X className="w-5 h-5"/></button>
+                        <button onClick={() => setModalOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors"><X className="w-5 h-5"/></button>
                     </div>
                     
                     <form onSubmit={handleSave} className="p-6 space-y-6">
-                        
-                         {/* Language Toggle Tabs */}
-                        <div>
-                            <label className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 block">Idioma</label>
-                            <div className="flex border-b border-gray-200 mb-4">
-                                <button 
-                                    type="button"
-                                    onClick={() => setModalLang('es')} 
-                                    className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
-                                        modalLang === 'es' 
-                                        ? 'border-rose-500 text-rose-600 bg-rose-50/50' 
-                                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    🇪🇸 Español
-                                </button>
-                                <button 
-                                    type="button"
-                                    onClick={() => setModalLang('en')} 
-                                    className={`flex items-center gap-2 px-4 py-2 text-sm font-bold border-b-2 transition-all ${
-                                        modalLang === 'en' 
-                                        ? 'border-blue-500 text-blue-600 bg-blue-50/50' 
-                                        : 'border-transparent text-gray-400 hover:text-gray-600 hover:bg-gray-50'
-                                    }`}
-                                >
-                                    🇺🇸 Inglés
-                                </button>
-                            </div>
+                        {/* Language Tabs */}
+                        <div className="flex border-b border-gray-100 mb-4">
+                            <button 
+                                type="button"
+                                onClick={() => setModalLang('es')}
+                                className={`flex-1 pb-2 text-sm font-bold border-b-2 transition-colors ${modalLang === 'es' ? 'border-rose-500 text-rose-600' : 'border-transparent text-gray-400'}`}
+                            >
+                                Español
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => setModalLang('en')}
+                                className={`flex-1 pb-2 text-sm font-bold border-b-2 transition-colors ${modalLang === 'en' ? 'border-blue-500 text-blue-600' : 'border-transparent text-gray-400'}`}
+                            >
+                                Inglés
+                            </button>
                         </div>
 
                         {modalLang === 'es' ? (
-                            <div className="animate-fade-in">
-                                <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
-                                    <Tag className="w-4 h-4 text-rose-500"/> Nombre Categoría (Español) <span className="text-red-500">*</span>
-                                </label>
-                                <input 
-                                    type="text" 
-                                    required 
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-rose-500 outline-none text-gray-900 font-medium placeholder-gray-300 transition-all" 
-                                    value={formData.nombre} 
-                                    onChange={e => setFormData({...formData, nombre: e.target.value})} 
-                                    placeholder="Ej. Mandalas, Animales..."
-                                />
+                            <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2">Nombre (Español) <span className="text-red-500">*</span></label>
+                                <div className="relative">
+                                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rose-500 outline-none" 
+                                        placeholder="Ej. Mandalas"
+                                        value={formData.nombre}
+                                        onChange={e => setFormData({...formData, nombre: e.target.value})}
+                                    />
+                                </div>
                             </div>
                         ) : (
-                             <div className="animate-fade-in bg-blue-50/30 p-4 rounded-xl border border-blue-100">
-                                <label className="block text-sm font-bold text-blue-900 mb-2 flex items-center gap-2">
-                                    <Languages className="w-4 h-4 text-blue-500"/> English Name (Traducción)
+                            <div>
+                                <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
+                                    Nombre (Inglés) <Languages className="w-4 h-4 text-blue-500"/>
                                 </label>
-                                <input 
-                                    type="text" 
-                                    className="w-full px-4 py-3 rounded-xl border border-blue-200 bg-white focus:ring-2 focus:ring-blue-500 outline-none text-gray-900 font-medium placeholder-gray-300 transition-all" 
-                                    value={formData.nombre_en || ''} 
-                                    onChange={e => setFormData({...formData, nombre_en: e.target.value})} 
-                                    placeholder="Ex. Mandalas, Animals..."
-                                />
-                                <p className="text-xs text-gray-400 mt-2">Si lo dejas vacío, se usará el nombre en español.</p>
+                                <div className="relative">
+                                    <Tag className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    <input 
+                                        type="text" 
+                                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 focus:ring-2 focus:ring-blue-500 outline-none bg-blue-50/20" 
+                                        placeholder="Ex. Mandalas"
+                                        value={formData.nombre_en || ''}
+                                        onChange={e => setFormData({...formData, nombre_en: e.target.value})}
+                                    />
+                                </div>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2">
-                                <Palette className="w-4 h-4 text-rose-500"/> Color Etiqueta
-                            </label>
+                            <label className="block text-sm font-bold text-gray-900 mb-2 flex items-center gap-2"><Palette className="w-4 h-4"/> Color de Etiqueta</label>
                             <div className="grid grid-cols-4 gap-3">
-                                {colorOptions.map((c) => (
+                                {colorOptions.map((col) => (
                                     <button
-                                        key={c.name}
+                                        key={col.name}
                                         type="button"
-                                        onClick={() => setFormData({...formData, color: c.class})}
-                                        className={`relative w-full aspect-video rounded-lg ${c.class} hover:opacity-90 transition-all ring-2 ring-offset-2 ${formData.color === c.class ? 'ring-gray-400 scale-105 shadow-md' : 'ring-transparent opacity-70'} flex items-center justify-center`}
-                                        title={c.name}
+                                        onClick={() => setFormData({...formData, color: col.class})}
+                                        className={`h-10 rounded-lg border-2 flex items-center justify-center transition-all ${col.class} ${formData.color === col.class ? 'border-gray-900 scale-110 shadow-md' : 'border-transparent opacity-70 hover:opacity-100'}`}
+                                        title={col.name}
                                     >
-                                        {formData.color === c.class && <Check className="w-5 h-5 text-white drop-shadow-md"/>}
+                                        {formData.color === col.class && <Check className="w-4 h-4 text-white font-bold" />}
                                     </button>
                                 ))}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-900 mb-2">Orden</label>
-                                <input 
-                                    type="number" 
-                                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:ring-2 focus:ring-rose-500 outline-none font-mono" 
-                                    value={formData.orden} 
-                                    onChange={e => setFormData({...formData, orden: Number(e.target.value)})} 
-                                />
-                            </div>
-                            <div className="flex items-center pt-8 justify-end">
-                                <label className="flex items-center gap-3 cursor-pointer group select-none">
-                                    <span className={`font-bold text-sm ${formData.activo ? 'text-green-600' : 'text-gray-400'}`}>
-                                        {formData.activo ? 'Visible' : 'Oculto'}
-                                    </span>
-                                    <div className={`w-12 h-7 rounded-full transition-colors relative ${formData.activo ? 'bg-green-500' : 'bg-gray-300'}`}>
-                                        <div className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-sm transition-transform ${formData.activo ? 'translate-x-5' : ''}`}></div>
-                                    </div>
-                                    <input type="checkbox" className="hidden" checked={formData.activo} onChange={e => setFormData({...formData, activo: e.target.checked})} />
-                                </label>
-                            </div>
+                        <div className="flex items-center gap-3 pt-2">
+                            <label className="flex items-center gap-3 cursor-pointer">
+                                <div className={`w-12 h-7 rounded-full transition-colors relative ${formData.activo ? 'bg-green-500' : 'bg-gray-300'}`}>
+                                    <div className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full shadow-sm transition-transform ${formData.activo ? 'translate-x-5' : ''}`}></div>
+                                </div>
+                                <input type="checkbox" className="hidden" checked={formData.activo} onChange={e => setFormData({...formData, activo: e.target.checked})} />
+                                <span className="font-bold text-gray-700 text-sm">Categoría Visible</span>
+                            </label>
                         </div>
 
-                        <div className="flex gap-3 pt-4 border-t border-gray-50">
-                            <Button type="button" variant="secondary" onClick={() => setModalOpen(false)} className="flex-1">
-                                Cancelar
-                            </Button>
-                            <Button type="submit" isLoading={saving} className="flex-1">
-                                <Save className="w-4 h-4 mr-2" /> Guardar
-                            </Button>
-                        </div>
+                        <Button type="submit" isLoading={saving} className="w-full">
+                            <Save className="w-4 h-4 mr-2" /> Guardar Categoría
+                        </Button>
                     </form>
                 </div>
             </div>

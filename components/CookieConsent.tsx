@@ -1,7 +1,10 @@
+
 import React, { useEffect, useState } from 'react';
 import { Cookie, X, Check } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+
+const { Link } = ReactRouterDOM;
 
 export const CookieConsent = () => {
   const [isVisible, setIsVisible] = useState(false);

@@ -1,10 +1,13 @@
+
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../services/supabase';
 import { DashboardStats, DailyMetric, Product } from '../../types';
 import { Eye, MousePointerClick, TrendingUp, Package, LogOut, LayoutDashboard, ChevronRight, Image as ImageIcon, Settings, Menu, X, RefreshCw, Users, Layers } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
+
+const { useNavigate, Link, useLocation } = ReactRouterDOM;
 
 const Dashboard = () => {
   const [stats, setStats] = useState<DashboardStats>({

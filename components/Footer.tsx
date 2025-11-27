@@ -1,9 +1,12 @@
+
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Instagram, Facebook, Mail, Lock, Flame, Twitter, Youtube, Globe, Music2 } from 'lucide-react';
 import { supabase } from '../services/supabase';
 import { SocialLink } from '../types';
 import { useTheme } from '../contexts/ThemeContext';
+
+const { Link, useNavigate } = ReactRouterDOM;
 
 export const Footer = () => {
   const navigate = useNavigate();

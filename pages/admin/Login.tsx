@@ -1,8 +1,11 @@
+
 import React, { useState } from 'react';
 import { supabase } from '../../services/supabase';
-import { useNavigate, Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
 import { X } from 'lucide-react';
+
+const { useNavigate, Link } = ReactRouterDOM;
 
 const Login = () => {
   const [email, setEmail] = useState('');

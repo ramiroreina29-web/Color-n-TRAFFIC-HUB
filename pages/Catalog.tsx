@@ -1,5 +1,6 @@
+
 import React, { useEffect, useState, useMemo } from 'react';
-import { useSearchParams, Link } from 'react-router-dom';
+import * as ReactRouterDOM from 'react-router-dom';
 import { supabase } from '../services/supabase';
 import { Product, Category } from '../types';
 import { ProductCard } from '../components/ProductCard';
@@ -8,6 +9,8 @@ import { PublicNavbar } from '../components/PublicNavbar';
 import { Search, X, Layers } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { SEO } from '../components/SEO';
+
+const { useSearchParams, Link } = ReactRouterDOM;
 
 const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -102,8 +105,8 @@ const Catalog = () => {
 
   // 1. Search Query
   if (queryParam) {
-      pageTitle = `Resultados para: "${queryParam}"`;
-      pageDescription = `${t('catalog_subtitle_search')} "${queryParam}"`;
+      pageTitle = 'Resultados para: "' + queryParam + '"';
+      pageDescription = t('catalog_subtitle_search') + ' "' + queryParam + '"';
       const lowerQ = queryParam.toLowerCase().trim();
       filteredProducts = products.filter(p => 
           p.titulo.toLowerCase().includes(lowerQ) || 
